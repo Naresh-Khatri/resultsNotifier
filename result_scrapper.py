@@ -39,7 +39,7 @@ for i in range(1,64):
     else:
         htn = '19fh1a05' + str(i)
 
-    url = 'https://jntuaresults.ac.in/results/res.php?ht=' + htn + '&id=56736380&accessToken=' + getToken()
+    url = 'https://jntuaresults.ac.in/results/res.php?ht=' + htn + '&id=56736322&accessToken=' + getToken()
 
     request = Request(url)
     request.add_header("Cookie", cookie)
