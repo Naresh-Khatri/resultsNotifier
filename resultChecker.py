@@ -148,7 +148,7 @@ def send_result(result_table, email):
     msg['Subject'] = 'subscribe to HotChaddi on youtube 🤣💯👌'
 
     server = smtplib.SMTP_SSL("smtp.gmail.com:465")
-    server.login("subscribe.to.hotchaddi.on.yt@gmail.com", "poojapooja1")
+    server.login("subscribe.to.hotchaddi.on.yt@gmail.com", <your_password_goes_here>)
     server.sendmail(
     "rosisgreaterthanpubg@gmail.com",
     email,
