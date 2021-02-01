@@ -174,6 +174,8 @@ def send_result(result_table, email, index):
         server.quit()
     else:
         print(f"Result already sent to {email}\n")
+
+        
 result_polling()
 #result_polling.apply_async()
 
