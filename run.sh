@@ -2,4 +2,4 @@
 source env/bin/activate
 # virtualenv is now active.
 #
-python resultChecker.py
+python3 resultChecker.py
