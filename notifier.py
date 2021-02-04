@@ -11,7 +11,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 
-with open(os.path.join( os.path.realpath('.'),"students.json")) as f:
+with open(os.path.join( os.getcwd(),"students.json")) as f:
     students = json.load(f)
 
 def extract_int(text):
