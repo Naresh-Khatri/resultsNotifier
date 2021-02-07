@@ -1,5 +1,5 @@
 #! /bin/bash
-source env/bin/activate
+source /home/code/resultsNotifier/env/bin/activate
 # virtualenv is now active.
 #
-python3 resultChecker.py
+python3 /home/code/resultsNotifier/resultChecker.py

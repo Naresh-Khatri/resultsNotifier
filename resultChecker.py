@@ -14,7 +14,7 @@ from email.mime.text import MIMEText
 cookie = "_ga=GA1.3.1774447704.1597145128; _gid=GA1.3.505915151.1608124559; PHPSESSID=nilfesqjlr1jo8mpi8k1ecdu17"
 filename = 'testing'
 
-with open(os.path.join( os.path.realpath('.'),"students.json")) as f:
+with open(os.path.join( "/home/code/resultsNotifier","studentsTesting.json")) as f:
     students = json.load(f)
 
 def extract_int(text):
