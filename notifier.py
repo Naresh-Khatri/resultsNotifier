@@ -41,7 +41,37 @@ def result_polling():
 def sendNotif(email):
     msg= MIMEMultipart('alternative')
 
-    mime_text = MIMEText('<h1> Results are not out yet! :/ </h1>','html')
+    html_tamplete = '''<body style='background: yellow'>
+<div style="background:yellow;display:flex; justify-content:center; align-items:center; border-radius: 25px;">
+<div class='card' style="display:block;  box-shadow: 0 10px 30px -6px black;
+border-radius:20px;
+background:#7e5594;
+  width: 400px;
+  height: 400px;
+  padding: 0px 10px;">
+<div style="text-align:center;font-size:130px">
+😔
+</div>
+<hr style="width:60%; border: 1px solid yellow">
+<h1>
+Results are not out yet!
+</h1>
+<li>
+If you'd like to refer this mail service to your friends then reply to 
+this mail providing their Hall Ticket Numbers along with their emails.
+</li>
+<li>
+  To unsubscribe from this service, reply to this mail saying so.
+</li>
+<hr style="width:40%;border: 1px solid yellow;">
+
+<div display:block>If you like this work then give a star on github <a style="color:yellow" href='https://github.com/Naresh-Khatri/resultsNotifier'>here</a></div>
+
+</div>
+</div>
+</body>'''
+    
+    mime_text = MIMEText(html_tamplete,'html')
 
     msg.attach(mime_text)
     msg['Subject'] = 'subscribe to HotChaddi on youtube 🤣💯👌'
