@@ -10,8 +10,13 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
+<<<<<<< HEAD
 
 with open(os.path.join( "/home/code/resultsNotifier","students.json")) as f:
+=======
+#with open(os.path.join( "/home/hotchaddi/projects/resultsNotifier","studentsTesting.json")) as f:
+with open(os.path.join( "/home/code/resultsNotifier","studentsTesting.json")) as f:
+>>>>>>> 1ae121a848c4bc38656f3f6850b0a56bd99b0a13
     students = json.load(f)
 
 def extract_int(text):
@@ -36,45 +41,79 @@ def result_polling():
         if not r19rows:
             print('not yet released')
             for student in students:
-                sendNotif(student["email"])
+                sendNotif(student["email"], False)
+        else:
+            sendNotif(student["email"],True)
 
-def sendNotif(email):
+def sendNotif(email, resultsOut):
     msg= MIMEMultipart('alternative')
 
-    html_tamplete = '''<body style='background: yellow'>
-<div style="background:yellow;display:flex; justify-content:center; align-items:center; border-radius: 25px;">
-<div class='card' style="display:block;  box-shadow: 0 10px 30px -6px black;
-border-radius:20px;
-background:#7e5594;
-  width: 400px;
-  height: 400px;
-  padding: 0px 10px;">
-<div style="text-align:center;font-size:130px">
-😔
-</div>
-<hr style="width:60%; border: 1px solid yellow">
-<h1>
-Results are not out yet!
-</h1>
-<li>
-If you'd like to refer this mail service to your friends then reply to 
-this mail providing their Hall Ticket Numbers along with their emails.
-</li>
-<li>
-  To unsubscribe from this service, reply to this mail saying so.
-</li>
-<hr style="width:40%;border: 1px solid yellow;">
+    neg_template = '''  <body style='background: yellow'>
+                            <div style="background:yellow;display:flex; justify-content:center; align-items:center; border-radius: 25px;">
+                                <div class='card' style="display:block;  box-shadow: 0 10px 30px -6px black;
+                                border-radius:20px;
+                                background:#7e5594;
+                                width: 400px;
+                                height: 400px;
+                                padding: 0px 10px;">
+                                    <div style="text-align:center;font-size:130px">
+                                    😔
+                                    </div>
+                                    <hr style="width:60%; border: 1px solid yellow">
+                                    <h1>
+                                    Results are not out yet!
+                                    </h1>
+                                    <li>
+                                    If you'd like to refer this mail service to your friends then reply to 
+                                    this mail providing their Hall Ticket Numbers along with their emails.
+                                    </li>
+                                    <li>
+                                    To unsubscribe from this service, reply to this mail saying so.
+                                    </li>
+                                    <hr style="width:40%;border: 1px solid yellow;">
 
-<div display:block>If you like this work then give a star on github <a style="color:yellow" href='https://github.com/Naresh-Khatri/resultsNotifier'>here</a></div>
+                                    <div display:block>If you like this work then give a star on github <a style="color:yellow" href='https://github.com/Naresh-Khatri/resultsNotifier'>here</a></div>
 
-</div>
-</div>
-</body>'''
+                                </div>
+                            </div>
+                        </body>'''
+    pos_template = '''<body style='background: yellow'>
+                        <div style="background:yellow;display:flex; justify-content:center; align-items:center; border-radius: 25px;">
+                            <div class='card' style="display:block;  box-shadow: 0 10px 30px -6px black;
+                                                border-radius:20px;
+                                                background:green;
+                                                color:white;
+                                                width: 400px;
+                                                height: 400px;
+                                                padding: 0px 10px;">
+                            <div style="text-align:center;font-size:130px">
+                            🙋
+                            </div>
+                            <hr style="width:60%; border: 1px solid yellow">
+                            <h1>
+                                 Results are OUT NOW!!!
+                            </h1>
+                            <li>
+                                If you'd like to refer this mail service to your friends then reply to 
+                                this mail providing their Hall Ticket Numbers along with their emails.
+                            </li>
+                            <li>
+                                To unsubscribe from this service, reply to this mail saying so.
+                            </li>
+                            <hr style="width:40%;border: 1px solid yellow;">
+
+                                <div display:block>If you like this work then give a star on github <a style="color:yellow" href='https://github.com/Naresh-Khatri/resultsNotifier'>here</a></div>
+
+                            </div>
+                        </div>
+                    </body>'''
+
+    html_template =  pos_template if resultsOut else neg_template
     
-    mime_text = MIMEText(html_tamplete,'html')
+    mime_text = MIMEText(html_template,'html')
 
     msg.attach(mime_text)
-    msg['Subject'] = 'subscribe to HotChaddi on youtube 🤣💯👌'
+    msg['Subject'] = 'Result Notifier BOT 🤖'
 
     server = smtplib.SMTP_SSL("smtp.gmail.com:465")
     server.login("subscribe.to.hotchaddi.on.yt@gmail.com", "poojapooja1")
