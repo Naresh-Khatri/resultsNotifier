@@ -156,7 +156,7 @@ def send_result(result_table, email, index):
         # index =[i for i in students if i['email'] == email]
         # print(index)
         students[index]["sent"] = True
-        studentsJson = open(os.path.join( os.path.realpath('.'),"students.json"), "w")
+        studentsJson = open(os.path.join( "/home/code/resultsNotifier","students.json"), "w")
         json.dump(students, studentsJson)
         studentsJson.close()
         print(f'mail sent to {email}\n')
@@ -167,4 +167,5 @@ def send_result(result_table, email, index):
 
 #print(extract_int("as1dfff2f34sdf5r6"))
 result_polling()
+#get_result(56736322,'19fh1a0546','naresh.khatri2345@gmail.com',0)
 #result_polling.apply_async()

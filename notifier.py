@@ -10,13 +10,9 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-<<<<<<< HEAD
 
-with open(os.path.join( "/home/code/resultsNotifier","students.json")) as f:
-=======
 #with open(os.path.join( "/home/hotchaddi/projects/resultsNotifier","studentsTesting.json")) as f:
-with open(os.path.join( "/home/code/resultsNotifier","studentsTesting.json")) as f:
->>>>>>> 1ae121a848c4bc38656f3f6850b0a56bd99b0a13
+with open(os.path.join( "/home/code/resultsNotifier","students.json")) as f:
     students = json.load(f)
 
 def extract_int(text):
