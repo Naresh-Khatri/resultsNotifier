@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-[{"htn": "19fh1a0546", "email": "naresh.khatri2345@gmail.com", "sent": true}, {"htn": "19fh1a0548", "email": "natesh.khatri31@gmail.com", "sent": false}, {"htn": "19fh1a0549", "email": "rosisbetterthanpubg@gmail.com", "sent": false}]
-=======
 [
     {"htn":"19fh1a0546", "email": "naresh.khatri2345@gmail.com", "sent": "False"},
     {"htn":"19fh1a0548", "email": "natesh.khatri31@gmail.com", "sent": "False"},
@@ -30,6 +27,4 @@
     {"htn":"19fh1a0561", "email": "jamesbharath123@gmail.com", "sent": "False"},
     {"htn":"19fh1a0562", "email": "vramanji60@gmail.com", "sent": "False"},
     {"htn":"19FH1A0126", "email": "raftaarmujhahd123@gmail.com", "sent": "False"},
-    
 ]
->>>>>>> dcb0ce23186312575b71cf16da2ef5f84068f237
