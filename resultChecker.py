@@ -14,7 +14,7 @@ from email.mime.text import MIMEText
 cookie = "_ga=GA1.3.1774447704.1597145128; _gid=GA1.3.505915151.1608124559; PHPSESSID=nilfesqjlr1jo8mpi8k1ecdu17"
 filename = 'testing'
 
-with open(os.path.join( "/home/code/resultsNotifier","studentsTesting.json")) as f:
+with open(os.path.join(os.getcwd() ,"students.json")) as f:
     students = json.load(f)
 
 def extract_int(text):
@@ -33,25 +33,33 @@ def result_polling():
 
         tr = tables.findAll("tr")
         top5rows = tr[1:10]
-        r19rows= [row.find("a") for row in top5rows if 'B.Tech' and 'R19' in row.find('a').text]
-        print(r19rows)
+        print(top5rows[5])
+        #r19rows= [row.find("a") for row in top5rows if 'B.Tech' and 'R19' in row.find('a').text]
+        #r19rows = top5rows[5]
         #print(r19rows[0])
+        #print(r19rows[0])
+        #first_td = r19rows[0]
+
+        index=0
+        for student in students:
+            get_result(56736424, student["htn"],student["email"], index)
+            index+=1
 
         #content = first_td.find("a")
 
-        if r19rows:
-            first_td = r19rows[0]
-            print(first_td.text)
-            print(f'Result ID acquired - {extract_int(first_td["href"])}')
-            #print(extract_int( first_td['href']))
-            index = 0
-            for student in students:
-                get_result(extract_int(first_td['href']), student["htn"],student["email"], index)
-                index+=1
-            print('All results sent to mails')
+        # if r19rows:
+        #     first_td = r19rows[0]
+        #     print(first_td.text)
+        #     print(f'Result ID acquired - {extract_int(first_td["href"])}')
+        #     #print(extract_int( first_td['href']))
+        #     index = 0
+        #     for student in students:
+        #         get_result(extract_int('first_td['href'])', student["htn"],student["email"], index)
+        #         index+=1
+        #     print('All results sent to mails')
 
-        else:
-            print("not released yet!")
+        # else:
+        #     print("not released yet!")
 
 
         # if "R17" in content.text:
@@ -131,13 +139,13 @@ def get_result(resultsID,htn, email, index):
         data.pop(-1)
 
         #print(page_html)
-        send_result(page_html, email, index)
+        #send_result(page_html, email, index)
         #send_result(data)
 
 
 def send_result(result_table, email, index):
     # if True:
-    if students[index]["sent"] == False:
+    if True:
         result = str(result_table)
         msg= MIMEMultipart('alternative')
 
@@ -147,7 +155,7 @@ def send_result(result_table, email, index):
         msg['Subject'] = 'subscribe to HotChaddi on youtube 🤣💯👌'
 
         server = smtplib.SMTP_SSL("smtp.gmail.com:465")
-        server.login("subscribe.to.hotchaddi.on.yt@gmail.com", "poojapooja1")
+        server.login("jntua.result.notifier.bot@gmail.com", "poojapooja1")
         server.sendmail(
         "rosisgreaterthanpubg@gmail.com",
         email,
@@ -156,7 +164,7 @@ def send_result(result_table, email, index):
         # index =[i for i in students if i['email'] == email]
         # print(index)
         students[index]["sent"] = True
-        studentsJson = open(os.path.join( "/home/code/resultsNotifier","students.json"), "w")
+        studentsJson = open(os.path.join(os.getcwd(),"students.json"), "w")
         json.dump(students, studentsJson)
         studentsJson.close()
         print(f'mail sent to {email}\n')
@@ -165,7 +173,6 @@ def send_result(result_table, email, index):
     else:
         print(f"Result already sent to {email}\n")
 
-#print(extract_int("as1dfff2f34sdf5r6"))
 result_polling()
 #get_result(56736322,'19fh1a0546','naresh.khatri2345@gmail.com',0)
 #result_polling.apply_async()
