@@ -4,13 +4,17 @@ import bs4
 import csv
 import json
 import os
-
 import time
 
 import smtplib
 
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+
+import logging
+
+logging.basicConfig(filename='logs.log', level=logging.INFO, 
+        format='%(asctime)s - %(message)s')
 
 
 cookie = "PHPSESSID=sdfds"
@@ -24,7 +28,8 @@ def extract_int(text):
 
 
 def get_sgpa(table):
-
+    
+    # to convert grade(str) to gradepoint(int)
     g_to_gp ={'s':10,'a':9,'b':8,'c':7,'d':6,'e':5,'f':0,'ab':0}    
 
     ob_cred = 0
@@ -179,6 +184,8 @@ def send_result(result_table, email, index):
     json.dump(students, studentsJson)
     studentsJson.close()
     print(f'mail sent to {email}')
+    logging.info(f'result sent to - {email}')
+
 
     server.quit()
    
@@ -211,6 +218,6 @@ def result_polling():
             index+=1
             print(f'Time taken = {time.time() - start_time}\n') 
     except:
-        print('Result not out yet :/')
+        logging.info('Results are not out yet :/')
 
 result_polling()

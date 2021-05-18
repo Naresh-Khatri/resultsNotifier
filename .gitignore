@@ -1,5 +1,7 @@
 testing.csv
 resultsSup.csv
+logs.log
 env/
 /ignore
 .vscode/
+
