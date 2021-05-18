@@ -5,6 +5,8 @@ import csv
 import json
 import os
 
+import time
+
 import smtplib
 
 from email.mime.multipart import MIMEMultipart
@@ -13,8 +15,8 @@ from email.mime.text import MIMEText
 
 cookie = "PHPSESSID=sdfds"
 
+# with open(os.path.join(os.getcwd() ,"students.json")) as f:
 with open(os.path.join(os.getcwd() ,"students.json")) as f:
-# with open(os.path.join(os.getcwd() ,"studentsTesting.json")) as f:
     students = json.load(f)
 
 def extract_int(text):
@@ -39,7 +41,7 @@ def get_sgpa(table):
             ci = float(foo[-1])
             gi = g_to_gp[foo[-2].lower()]
             ob_cred += ci*gi
-    print(round(ob_cred/tot_cred,2))
+    print(f'SGPA = {round(ob_cred/tot_cred,2)}')
     try:
         return round(ob_cred/tot_cred,2)
     except :
@@ -47,7 +49,7 @@ def get_sgpa(table):
 
 
 def get_token(resultID):
-
+    start_time = time.time()
     url = f'https://jntuaresults.ac.in/view-results-{resultID}.html'
     request = Request(url)
     request.add_header("Cookie", cookie)
@@ -62,12 +64,15 @@ def get_token(resultID):
     token_text = page_soup[start_index: start_index+30]
 
     access_token = "".join([str(char) for char in token_text if char.isdigit()])
-    print('access token acquired -  ' +  access_token)
+    print(f'access token acquired -  {access_token} in {time.time() - start_time}s\n' )
     return access_token
 
 
-def get_result(resultsID,htn, email, index):
-    token = get_token(resultsID)
+def get_result(resultsID, token, htn, email, index):
+    if students[index]['sent']:
+        print(f"Result already sent to {email}")
+        return
+    
     url = f'https://jntuaresults.ac.in/results/res.php?ht={htn}&id={resultsID}&accessToken={token}'
 
     request = Request(url)
@@ -149,34 +154,34 @@ def get_result(resultsID,htn, email, index):
 
 
 def send_result(result_table, email, index):
-    if True:
-        result = str(result_table)
-        msg= MIMEMultipart('alternative')
+  
+    result = str(result_table)
+    msg= MIMEMultipart('alternative')
 
-        mime_text = MIMEText(result,'html')
+    mime_text = MIMEText(result,'html')
 
-        msg.attach(mime_text)
-        msg['Subject'] = 'subscribe to HotChaddi on youtube 🤣💯👌'
+    msg.attach(mime_text)
+    msg['Subject'] = 'subscribe to HotChaddi on youtube 🤣💯👌'
 
-        server = smtplib.SMTP_SSL("smtp.gmail.com:465")
-        server.login("jntua.result.notifier.bot@gmail.com", "poojapooja2")
-        server.sendmail(
-            "rosisgreaterthanpubg@gmail.com",
-            email,
-            msg.as_string()
-        )
+    server = smtplib.SMTP_SSL("smtp.gmail.com:465")
+    server.login("jntua.result.notifier.bot@gmail.com", "poojapooja2")
+    server.sendmail(
+        "rosisgreaterthanpubg@gmail.com",
+        email,
+        msg.as_string()
+    )
 
-        # index =[i for i in students if i['email'] == email]
-        # print(index)
-        students[index]["sent"] = True
-        studentsJson = open(os.path.join(os.getcwd(),"students.json"), "w")
-        json.dump(students, studentsJson)
-        studentsJson.close()
-        print(f'mail sent to {email}\n')
+    # index =[i for i in students if i['email'] == email]
+    # print(index)
+    students[index]["sent"] = True
+    # studentsJson = open(os.path.join(os.getcwd(),"students.json"), "w")
+    studentsJson = open(os.path.join(os.getcwd(),"students.json"), "w")
+    json.dump(students, studentsJson)
+    studentsJson.close()
+    print(f'mail sent to {email}')
 
-        server.quit()
-    else:
-        print(f"Result already sent to {email}\n")
+    server.quit()
+   
 
 def result_polling():
     request = Request('https://jntuaresults.ac.in/')
@@ -195,12 +200,16 @@ def result_polling():
     try:
         first_td = r19rows[0]
         resultID = extract_int(first_td['href'])
+        token = get_token(resultID)
         
-        _old_result_id = 56736424
+        #_old_result_id = 56736424
+
         index=0
         for student in students:
-            get_result(resultID, student["htn"],student["email"], index)
+            start_time = time.time()
+            get_result(resultID, token, student["htn"],student["email"], index)
             index+=1
+            print(f'Time taken = {time.time() - start_time}\n') 
     except:
         print('Result not out yet :/')
 

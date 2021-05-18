@@ -1,0 +1,7 @@
+obtaining token everytime
+    time with sending = 7s
+    time with get result then already sent = 2s
+
+obtaining token only once
+    time with sending = 5.7s
+    time without get result then already sent = 0.0005s
