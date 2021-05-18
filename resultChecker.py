@@ -11,74 +11,46 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 
-cookie = "_ga=GA1.3.1774447704.1597145128; _gid=GA1.3.505915151.1608124559; PHPSESSID=nilfesqjlr1jo8mpi8k1ecdu17"
-filename = 'testing'
+cookie = "PHPSESSID=sdfds"
 
 with open(os.path.join(os.getcwd() ,"students.json")) as f:
+# with open(os.path.join(os.getcwd() ,"studentsTesting.json")) as f:
     students = json.load(f)
 
 def extract_int(text):
     return "".join([str(char) for char in text if char.isdigit()])
 
-def result_polling():
-    #while True:
-        request = Request('https://jntuaresults.ac.in/')
-        uClient = urlopen(request)
-        page_html = uClient.read()
-        uClient.close()
 
-        page_soup = BeautifulSoup(page_html,"html.parser")
+def get_sgpa(table):
 
-        tables = page_soup.find('table', attrs={"class": "ui table segment"})
+    g_to_gp ={'s':10,'a':9,'b':8,'c':7,'d':6,'e':5,'f':0,'ab':0}    
 
-        tr = tables.findAll("tr")
-        top5rows = tr[1:10]
-        print(top5rows[5])
-        #r19rows= [row.find("a") for row in top5rows if 'B.Tech' and 'R19' in row.find('a').text]
-        #r19rows = top5rows[5]
-        #print(r19rows[0])
-        #print(r19rows[0])
-        #first_td = r19rows[0]
+    ob_cred = 0
+    tot_cred = 21.5
+    ci, gi = 0, 0
 
-        index=0
-        for student in students:
-            get_result(56736424, student["htn"],student["email"], index)
-            index+=1
+    table_rows = table.findAll('tr')
+    for row in table_rows:
+        cols = row.findAll('td')
+        foo = []
+        for col in cols:
+            foo.append(col.text)
+        if len(foo) > 0:
+            ci = float(foo[-1])
+            gi = g_to_gp[foo[-2].lower()]
+            ob_cred += ci*gi
+    print(round(ob_cred/tot_cred,2))
+    try:
+        return round(ob_cred/tot_cred,2)
+    except :
+        return round(ob_cred/tot_cred,2)
 
-        #content = first_td.find("a")
-
-        # if r19rows:
-        #     first_td = r19rows[0]
-        #     print(first_td.text)
-        #     print(f'Result ID acquired - {extract_int(first_td["href"])}')
-        #     #print(extract_int( first_td['href']))
-        #     index = 0
-        #     for student in students:
-        #         get_result(extract_int('first_td['href'])', student["htn"],student["email"], index)
-        #         index+=1
-        #     print('All results sent to mails')
-
-        # else:
-        #     print("not released yet!")
-
-
-        # if "R17" in content.text:
-        #     print(content.text)
-        #     print(f'Result ID acquired - {extract_int(content["href"])}')
-        #     index = 0
-        #     for student in students:
-        #         get_result(extract_int(content['href']), student["htn"],student["email"], index)
-        #         index+=1
-
-        # else:
-        #     print("not released yet!")
 
 def get_token(resultID):
 
     url = f'https://jntuaresults.ac.in/view-results-{resultID}.html'
     request = Request(url)
     request.add_header("Cookie", cookie)
-
 
     uClient = urlopen(request)
     page_html = uClient.read()
@@ -96,7 +68,6 @@ def get_token(resultID):
 
 def get_result(resultsID,htn, email, index):
     token = get_token(resultsID)
-    oldresultID = '56736322'
     url = f'https://jntuaresults.ac.in/results/res.php?ht={htn}&id={resultsID}&accessToken={token}'
 
     request = Request(url)
@@ -109,42 +80,75 @@ def get_result(resultsID,htn, email, index):
     page_soup = BeautifulSoup(page_html, 'html.parser')
 
     table = page_soup.find('table')
+    sgpa = get_sgpa(table)
     if(table):
         rows = table.findAll('tr')
 
         name_index = str(page_soup).find('Student name')
         table_index = str(page_soup).find('table')
-        name = str(page_soup)[name_index + 18:table_index-6]
+        name = str(page_soup)[name_index + 18: table_index - 6]
         print(f"Obtaining {name}'s result...")
-        f = open(filename + '.csv', 'a', newline='')
-        writer = csv.writer(f)
-        writer.writerow([f'*{name} ({htn})'])
-        f.close()
+        #print(table)
+        style = '''<style>
+             @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400&family=Roboto+Condensed&family=Roboto+Mono:wght@300;500&display=swap');
 
-        data =[]
-
-        for row in rows:
-            cols = row.find_all('td')
-            cols = [ele.text.strip() for ele in cols]
-            data.append([ele for ele in cols if ele])
-
-
-            tup = (cols)
-            f = open(filename + '.csv', 'a', newline='')
-            writer = csv.writer(f)
-            writer.writerow(tup)
-            f.close()
-
-        data.pop(0)
-        data.pop(-1)
-
-        #print(page_html)
-        #send_result(page_html, email, index)
-        #send_result(data)
+            * {
+                font-family: 'Lato', sans-serif;
+                font-family: 'Roboto Condensed', sans-serif;
+                font-family: 'Roboto Mono', monospace;
+            }banner {margin: 70px 0px;width: 90vw;
+            } .slider {width: 80%;height: 40px;margin: 20px 0px;background: #deacf5;border-radius: 25px;
+            }.inner-slide {background: #6237a0;height: 100%;border-radius: 15px 0px 0px 15px;color: white;transition: all 1s;
+            }.inner-slide-text {float: right;margin-right:10px;height: 100%;
+            }.row {display: flex;flex-direction: row;
+            }.col {flex: 50%;flex-direction: column;
+            }.justify-center {display: flex;justify-content: center;
+            }.ui td,.ui th {padding: 8px;
+            }.ui tr:nth-child(odd) {background: #fefefe;
+            }.ui tr:hover {background: #deacf5;
+            }.ui th {padding-top: 12px;padding-bottom: 12px;text-align: left;background-color: #6237a0;color: white;
+            }</style>'''
+       
+        testhtml = f'''<!DOCTYPE html>
+                        <html lang="en">
+                            <head>
+                                <meta charset="utf-8" />
+                                <title>Result</title>
+                                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                                {style}
+                            </head>
+                            <body class='justify-center' style='width:80%>
+                                <div class='banner'>
+                                    <div class='justify-center'>    
+                                        <div>
+                                            <div>Hall Ticket No: <b>{htn} </b></div>
+                                            <div>Student name: <b> {name} </b></div>
+                                            <div>
+                                                <div class='slider' style='width:500px'>
+                                                    <div class='inner-slide' style='width:{sgpa*10}%'>
+                                                        <div class='inner-slide-text' style='display:flex; align-items:center'>
+                                                            SGPA: {sgpa}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {table}
+                                 <th colspan="7" style="text-align:center">
+                                    <div>
+                                        Know more about your result <a href='https://naresh-khatri.github.io/JNTUA-result-analyser-spa/'> HERE </a>  
+                                    </div>
+                                        If you want to support this bot service please give us a <a href='https://github.com/Naresh-Khatri/resultsNotifier'>STAR!</a>
+                                    </th>
+                            </body>
+                        </html>
+                        '''
+        send_result(testhtml, email, index)
 
 
 def send_result(result_table, email, index):
-    # if True:
     if True:
         result = str(result_table)
         msg= MIMEMultipart('alternative')
@@ -155,12 +159,13 @@ def send_result(result_table, email, index):
         msg['Subject'] = 'subscribe to HotChaddi on youtube 🤣💯👌'
 
         server = smtplib.SMTP_SSL("smtp.gmail.com:465")
-        server.login("jntua.result.notifier.bot@gmail.com", "poojapooja1")
+        server.login("jntua.result.notifier.bot@gmail.com", "poojapooja2")
         server.sendmail(
-        "rosisgreaterthanpubg@gmail.com",
-        email,
-        msg.as_string()
+            "rosisgreaterthanpubg@gmail.com",
+            email,
+            msg.as_string()
         )
+
         # index =[i for i in students if i['email'] == email]
         # print(index)
         students[index]["sent"] = True
@@ -173,6 +178,30 @@ def send_result(result_table, email, index):
     else:
         print(f"Result already sent to {email}\n")
 
+def result_polling():
+    request = Request('https://jntuaresults.ac.in/')
+    uClient = urlopen(request)
+    page_html = uClient.read()
+    uClient.close()
+
+    page_soup = BeautifulSoup(page_html,"html.parser")
+
+    tables = page_soup.find('table', attrs={"class": "ui table segment"})
+
+    tr = tables.findAll("tr")
+    # excluding titles row ie 0
+    top5rows = tr[1:10]                                        
+    r19rows= [row.find("a") for row in top5rows if 'R19' in row.find('a').text and 'B.Tech' in row.find('a').text]
+    try:
+        first_td = r19rows[0]
+        resultID = extract_int(first_td['href'])
+        
+        _old_result_id = 56736424
+        index=0
+        for student in students:
+            get_result(resultID, student["htn"],student["email"], index)
+            index+=1
+    except:
+        print('Result not out yet :/')
+
 result_polling()
-#get_result(56736322,'19fh1a0546','naresh.khatri2345@gmail.com',0)
-#result_polling.apply_async()

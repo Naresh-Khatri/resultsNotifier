@@ -1,5 +1,5 @@
 #! /bin/bash
-source /home/code/resultsNotifier/env/bin/activate
+source /root/resultsNotifier/env/bin/activate
 # virtualenv is now active.
 #
-python3 /home/code/resultsNotifier/notifier.py
+python3 /root/resultsNotifier/notifier.py
